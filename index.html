@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prismatic Feedback Journey</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-white to-blue-100 text-gray-800 font-poppins overflow-hidden">
+    <canvas id="bgCanvas" class="fixed inset-0 z-0 opacity-50"></canvas>
+    <div class="relative z-10 flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white bg-opacity-90 backdrop-blur-lg p-10 rounded-2xl shadow-2xl w-full max-w-xl border border-gray-200">
+            <h1 class="text-4xl font-bold text-center mb-8 text-blue-600 prismatic-glow">Prismatic Feedback Journey</h1>
+            <div class="flex justify-between mb-6">
+                <div class="step-indicator flex-1 text-center">
+                    <span class="block w-8 h-8 mx-auto rounded-full bg-blue-200 text-blue-600 font-semibold">1</span>
+                    <p class="text-sm mt-2">Personal Info</p>
+                </div>
+                <div class="step-indicator flex-1 text-center">
+                    <span class="block w-8 h-8 mx-auto rounded-full bg-gray-200 text-gray-500 font-semibold">2</span>
+                    <p class="text-sm mt-2">Feedback Details</p>
+                </div>
+                <div class="step-indicator flex-1 text-center">
+                    <span class="block w-8 h-8 mx-auto rounded-full bg-gray-200 text-gray-500 font-semibold">3</span>
+                    <p class="text-sm mt-2">Review & Submit</p>
+                </div>
+            </div>
+            <form id="feedbackForm" class="space-y-6">
+                <!-- Step 1: Personal Info -->
+                <div id="step1" class="step">
+                    <div class="relative">
+                        <input type="text" id="name" name="name" required
+                               class="w-full px-4 py-3 bg-transparent border border-blue-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all duration-300"
+                               placeholder="Your Name">
+                        <div class="absolute inset-0 bg-blue-100 opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
+                    </div>
+                    <div class="relative">
+                        <input type="email" id="email" name="email" required
+                               class="w-full px-4 py-3 bg-transparent border border-blue-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all duration-300"
+                               placeholder="Your Email">
+                        <div class="absolute inset-0 bg-blue-100 opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
+                    </div>
+                </div>
+                <!-- Step 2: Feedback Details -->
+                <div id="step2" class="step hidden">
+                    <div class="relative">
+                        <label for="feedbackType" class="block text-sm font-medium text-blue-600 mb-2">Feedback Type</label>
+                        <select id="feedbackType" name="feedbackType" required
+                                class="w-full px-4 py-3 bg-transparent border border-blue-300 rounded-lg text-gray-800 focus:outline-none focus:border-blue-500 transition-all duration-300 appearance-none">
+                            <option value="" disabled selected>Feedback Type</option>
+                            <option value="suggestion">Suggestion</option>
+                            <option value="complaint">Complaint</option>
+                            <option value="praise">Praise</option>
+                            <option value="other">Other</option>
+                        </>
+                        <div class="absolute inset-0 bg-blue-100 opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-blue-600 mb-2">Rating</label>
+                        <div class="flex space-x-2" id="rating">
+                            <input type="radio" id="star5" name="rating" value="5" class="hidden" required>
+                            <label for="star5" class="cursor-pointer text-2xl text-gray-400 hover:text-blue-500 transition-colors duration-200">★</label>
+                            <input type="radio" id="star4" name="rating" value="4" class="hidden">
+                            <label for="star4" class="cursor-pointer text-2xl text-gray-400 hover:text-blue-500 transition-colors duration-200">★</label>
+                            <input type="radio" id="star3" name="rating" value="3" class="hidden">
+                            <label for="star3" class="cursor-pointer text-2xl text-gray-400 hover:text-blue-500 transition-colors duration-200">★</label>
+                            <input type="radio" id="star2" name="rating" value="2" class="hidden">
+                            <label for="star2" class="cursor-pointer text-2xl text-gray-400 hover:text-blue-500 transition-colors duration-200">★</label>
+                            <input type="radio" id="star1" name="rating" value="1" class="hidden">
+                            <label for="star1" class="cursor-pointer text-2xl text-gray-400 hover:text-blue-500 transition-colors duration-200">★</label>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <textarea id="comments" name="comments" rows="4" required
+                                  class="w-full px-4 py-3 bg-transparent border border-blue-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all duration-300"
+                                  placeholder="Your Feedback"></textarea>
+                        <div class="absolute inset-0 bg-blue-100 opacity-0 hover:opacity-10 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
+                    </div>
+                </div>
+                <!-- Step 3: Review & Submit -->
+                <div id="step3" class="step hidden">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h2 class="text-lg font-medium text-blue-600 mb-4">Review Your Feedback</h2>
+                        <p><strong>Name:</strong> <span id="reviewName" class="text-gray-700"></span></p>
+                        <p><strong>Email:</strong> <span id="reviewEmail" class="text-gray-700"></span></p>
+                        <p><strong>Feedback Type:</strong> <span id="reviewFeedbackType" class="text-gray-700"></span></p>
+                        <p><strong>Rating:</strong> <span id="reviewRating" class="text-gray-700"></span></p>
+                        <p><strong>Comments:</strong> <span id="reviewComments" class="text-gray-700"></span></p>
+                    </div>
+                </div>
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between mt-6">
+                    <button type="button" id="prevBtn" class="hidden px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-medium hover:bg-gray-400 transition-all duration-300 transform hover:scale-105">
+                        Previous
+                    </button>
+                    <button type="button" id="nextBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                        Next
+                    </button>
+                    <button type="submit" id="submitBtn" class="hidden px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
+                        Submit Feedback
+                    </button>
+                </div>
+            </form>
+            <p id="message" class="mt-6 text-center text-sm text-blue-600 hidden"></p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

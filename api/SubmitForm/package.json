@@ -1,0 +1,9 @@
+{
+  "name": "feedback-api",
+  "version": "1.0.0",
+  "description": "Azure Function for handling feedback form submissions",
+  "main": "index.js",
+  "dependencies": {
+    "uuid": "^9.0.1"
+  }
+}

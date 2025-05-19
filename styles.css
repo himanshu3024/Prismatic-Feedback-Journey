@@ -1,0 +1,104 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+}
+
+@font-face {
+    font-family: 'Space Mono';
+    src: url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400&display=swap');
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom right, #ffffff, #dbeafe);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.prismatic-glow {
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.5), 0 0 16px rgba(59, 130, 246, 0.3);
+}
+
+#bgCanvas {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+input, select, textarea {
+    transition: all 0.3s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%233b82f6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25em;
+}
+
+button {
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+    transform: scale(1);
+}
+
+.step-indicator span {
+    transition: all 0.3s ease;
+}
+
+input.border-red-500, select.border-red-500, textarea.border-red-500 {
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+#rating.border-red-500 {
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+#message.success {
+    color: #10b981;
+    animation: pulse 1.5s infinite;
+}
+
+#message.error {
+    color: #ef4444;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { text-shadow: 0 0 4px currentColor; }
+    50% { text-shadow: 0 0 12px currentColor; }
+    100% { text-shadow: 0 0 4px currentColor; }
+}
+
+.step {
+    min-height: 200px;
+}
+
+.bg-blue-50 {
+    background: linear-gradient(to right, #eff6ff, #dbeafe);
+}
+
+@media (max-width: 640px) {
+    .step-indicator {
+        font-size: 0.75rem;
+    }
+    .step-indicator span {
+        width: 1.5rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+    }
+    h1 {
+        font-size: 1.75rem;
+    }
+}
