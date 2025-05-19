@@ -86,3 +86,53 @@ module.exports = async function (context, req) {
         };
     }
 };
+
+const { BlobServiceClient } = require('@azure/storage-blob');
+
+module.exports = async function (context, req) {
+    context.log('Form submission received');
+
+    try {
+        // Parse the incoming form data (assuming JSON)
+        const formData = req.body;
+
+        // Convert form data to JSON string
+        const content = JSON.stringify(formData);
+
+        // Generate a unique blob name using timestamp
+        const blobName = `form-${Date.now()}.json`;
+
+        // Get the connection string from environment variables
+        const AZURE_STORAGE_CONNECTION_STRING = process.env.AzureWebJobsStorage;
+
+        // Create the BlobServiceClient object
+        const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+
+        // Get a reference to the container (e.g., 'formdata')
+        const containerName = "formdata";
+        const containerClient = blobServiceClient.getContainerClient(containerName);
+
+        // Create container if it doesn't exist (safe call)
+        await containerClient.createIfNotExists({
+            access: 'private'
+        });
+
+        // Get a block blob client
+        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+        // Upload the content
+        await blockBlobClient.upload(content, content.length);
+
+        context.res = {
+            status: 200,
+            body: { message: "Form data uploaded successfully." }
+        };
+
+    } catch (error) {
+        context.log.error("Error uploading form data:", error);
+        context.res = {
+            status: 500,
+            body: { error: "Error uploading form data." }
+        };
+    }
+};
