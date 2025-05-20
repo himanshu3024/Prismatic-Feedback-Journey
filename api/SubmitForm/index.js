@@ -1,4 +1,5 @@
 const { CosmosClient } = require("@azure/cosmos");
+const { BlobServiceClient } = require('@azure/storage-blob');
 
 module.exports = async function (context, req) {
     context.log('Processing feedback form submission');
@@ -48,16 +49,15 @@ module.exports = async function (context, req) {
             return;
         }
 
-        // Initialize Cosmos DB client
-        const client = new CosmosClient({
+        // === 1. Save to Cosmos DB ===
+        const cosmosClient = new CosmosClient({
             endpoint: process.env.COSMOS_ENDPOINT,
             key: process.env.COSMOS_KEY
         });
 
-        const database = client.database("FeedbackDB");
+        const database = cosmosClient.database("FeedbackDB");
         const container = database.container("Feedback");
 
-        // Create feedback item
         const feedbackItem = {
             id: `${feedback.email}_${feedback.timestamp}`,
             partitionKey: feedback.email,
@@ -69,70 +69,34 @@ module.exports = async function (context, req) {
             timestamp: feedback.timestamp
         };
 
-        // Upsert to Cosmos DB
         await container.items.upsert(feedbackItem);
 
-        context.res = {
-            status: 200,
-            body: { message: 'Feedback successfully stored' },
-            headers: { 'Content-Type': 'application/json' }
-        };
-    } catch (error) {
-        context.log.error('Error processing feedback:', error);
-        context.res = {
-            status: 500,
-            body: { error: 'Internal server error' },
-            headers: { 'Content-Type': 'application/json' }
-        };
-    }
-};
-
-const { BlobServiceClient } = require('@azure/storage-blob');
-
-module.exports = async function (context, req) {
-    context.log('Form submission received');
-
-    try {
-        // Parse the incoming form data (assuming JSON)
-        const formData = req.body;
-
-        // Convert form data to JSON string
-        const content = JSON.stringify(formData);
-
-        // Generate a unique blob name using timestamp
-        const blobName = `form-${Date.now()}.json`;
-
-        // Get the connection string from environment variables
+        // === 2. Upload to Blob Storage ===
         const AZURE_STORAGE_CONNECTION_STRING = process.env.AzureWebJobsStorage;
-
-        // Create the BlobServiceClient object
         const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+        const containerClient = blobServiceClient.getContainerClient("formdata");
 
-        // Get a reference to the container (e.g., 'formdata')
-        const containerName = "formdata";
-        const containerClient = blobServiceClient.getContainerClient(containerName);
+        await containerClient.createIfNotExists({ access: 'private' });
 
-        // Create container if it doesn't exist (safe call)
-        await containerClient.createIfNotExists({
-            access: 'private'
-        });
-
-        // Get a block blob client
+        const blobName = `form-${Date.now()}.json`;
         const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+        const content = JSON.stringify(feedback);
 
-        // Upload the content
         await blockBlobClient.upload(content, content.length);
 
+        // Success response
         context.res = {
             status: 200,
-            body: { message: "Form data uploaded successfully." }
+            body: { message: 'Feedback successfully stored and uploaded.' },
+            headers: { 'Content-Type': 'application/json' }
         };
 
     } catch (error) {
-        context.log.error("Error uploading form data:", error);
+        context.log.error("Error processing feedback:", error);
         context.res = {
             status: 500,
-            body: { error: "Error uploading form data." }
+            body: { error: "Internal server error." },
+            headers: { 'Content-Type': 'application/json' }
         };
     }
 };

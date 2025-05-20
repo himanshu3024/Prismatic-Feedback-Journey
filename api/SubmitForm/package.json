@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Azure Function for handling feedback form submissions",
   "main": "index.js",
-  "dependencies": {
-    "uuid": "^9.0.1"
-  }
+ "dependencies": {
+  "@azure/cosmos": "^4.0.0", 
+  "uuid": "^9.0.1"
+}
+
+
 }
