@@ -2,6 +2,7 @@
   "IsEncrypted": false,
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true"
+    "Afeedbackformsettingdata": "UseDevelopmentStorage=true",
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=prismaticfeedbackjourney;AccountKey=10DoilWGyQltxx7Mc8ZTfnHTloSeEjhmb7SRfJ8jf8J7SBegEFMBk/2sVyYcRm+29PMFXfaB+n1y+AStpV/Waw==;EndpointSuffix=core.windows.net"
   }
 }
